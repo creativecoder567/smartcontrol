@@ -48,23 +48,25 @@ public class MachineActivity extends AppCompatActivity {
 
     private void addDataInRecylerView() {
         pDialog = new ProgressDialog(MachineActivity.this);
-        pDialog.setMessage("Attempting login...");
+        pDialog.setMessage("Loading...");
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(true);
         pDialog.show();
 
         String token = mSharedPreferences.getString("token","");
-
-        Call<Example> call = App.getApiService().requestMachineDetails( "Bearer "+token,"1","50","2");
+        String id = String.valueOf(mSharedPreferences.getInt("companyId",0));
+        Call<Example> call = App.getApiService().requestMachineDetails( "Bearer "+token,"1","50",id);
         call.enqueue(new Callback<Example>() {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {
                 pDialog.dismiss();
                 if (response.isSuccessful()){
-                    assets.clear();
+                 if (response.body().getData().getAssets()!=null){
+                     assets.clear();
                      assets.addAll(response.body().getData().getAssets());
-                    Log.d("sarath", "onResponse: "+assets.size());
-                    setUpRecylerView();
+                     setUpRecylerView();
+                 }
+
                 }else {
                     ErrorHandling.isnotSuccessful(response.code(),response.message(),getApplicationContext());
                 }

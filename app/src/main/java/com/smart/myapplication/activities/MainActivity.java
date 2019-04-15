@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                   Company company = user.getCompany();
 
                    mSharedPreferences.edit().putString("token",data.getToken()).apply();
-                   mSharedPreferences.edit().putInt("companyId",company.getId());
+                   mSharedPreferences.edit().putInt("companyId",company.getId()).apply();
                   startActivity(new Intent(MainActivity.this, MachineActivity.class));
                   finish();
 
