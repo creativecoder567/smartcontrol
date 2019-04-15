@@ -93,15 +93,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 pDialog.dismiss();
               if (response.isSuccessful()){
                   Toast.makeText(MainActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                  if(response.body().getData()!=null){
+                      Data data = response.body().getData();
+                      User user = data.getUser();
+                      Company company = user.getCompany();
 
-                  Data data = response.body().getData();
-                  User user = data.getUser();
-                  Company company = user.getCompany();
-
-                   mSharedPreferences.edit().putString("token",data.getToken()).apply();
-                   mSharedPreferences.edit().putInt("companyId",company.getId()).apply();
-                  startActivity(new Intent(MainActivity.this, MachineActivity.class));
-                  finish();
+                      mSharedPreferences.edit().putString("token",data.getToken()).apply();
+                      mSharedPreferences.edit().putInt("companyId",company.getId()).apply();
+                      startActivity(new Intent(MainActivity.this, MachineActivity.class));
+                      finish();
+                  }
 
               }else {
                   ErrorHandling.isnotSuccessful(response.code(),response.message(),getApplicationContext());
